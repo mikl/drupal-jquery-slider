@@ -1,0 +1,144 @@
+<?php // $Id$
+
+/**
+ * @file jquery_slider.module
+ * A helper module, providing a jQuery UI slider form element.
+ */
+
+/**
+
+/**
+ * Implementation of hook_theme().
+ */
+function jquery_slider_theme() {
+  return array(
+    'jquery_slider' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
+}
+
+
+/**
+ * Implementation of FAPI hook_elements().
+ */
+function jquery_slider_elements() {
+  return array(
+    'jquery_slider' => array(
+      '#input' => TRUE,
+      '#columns' => array('from', 'to'),
+      '#process' => array('_jquery_slider_process'),
+      '#required' => FALSE,
+      '#default_value' => array('from' => 0, 'to' => 20),
+      '#mininum_value' => 0,
+      '#maximum_value' => 20,
+      '#maximum_difference' => 0,
+      '#slide_step' => 1,
+      '#theme' => 'jquery_slider',
+    ),
+  );
+}
+
+/**
+ * Construct the actual form element
+ */
+function _jquery_slider_process($element, $edit, $form_state, $form) {
+  static $build_id;
+  if (is_null($build_id)) {
+    $build_id = 0;
+    jqp_add_js('ui.core.min.js');
+    jqp_add_js('ui.slider.min.js');
+    jqp_add_css('ui.all.css');
+    drupal_add_js(drupal_get_path('module', 'jquery_slider') . '/jquery_slider.js');
+  }
+  else {
+    $build_id++;
+  }
+
+  $js_data = array('jQuerySlider' => array($build_id => array(
+    'minimum_value' => $element['#minimum_value'],
+    'maximum_value' => $element['#maximum_value'],
+    'maximum_difference' => $element['#maximum_difference'],
+    'slide_step' => $element['#slide_step'],
+  )));
+  drupal_add_js($js_data, 'setting');
+
+  $element['#prefix'] = sprintf('<div class="jquery-slider jquery-slider-%s"
+    id="jquery-slider-%s">', $element['#parents'][0], $build_id);
+  $element['#suffix'] = '</div>';
+
+  $element['label'] = array(
+    '#value' => '<div class="label">' . $element['#title'] . '</div>',
+  );
+
+  $element['slider'] = array(
+    '#value' => '<div class="slider-instance"></div>'
+  );
+  
+  $element['from'] = array(
+    '#type' => 'textfield',
+    '#title' => t('From'),
+    '#size' => 7,
+    '#default_value' => $element['#default_value']['from'],
+    '#attributes' => array('class' => 'from-value'),
+    '#prefix' => '',
+  );
+
+  $element['to'] = array(
+    '#type' => 'textfield',
+    '#title' => t('To'),
+    '#size' => 7,
+    '#default_value' => $element['#default_value']['to'],
+    '#attributes' => array('class' => 'to-value'),
+  );
+  // Add our own validation step
+  if (empty($element['#element_validate'])) {
+    $element['#element_validate'] = array();
+  }
+  array_unshift($element['#element_validate'], '_jquery_slider_validate');
+
+  // Used so that hook_field('validate') knows where to flag an error.
+  $element['_error_element'] = array(
+    '#type' => 'value',
+    // Wrapping the element around a text_textfield element creates a
+    // nested element, so the final id will look like 'field-name-0-nid-nid'.
+    '#value' => implode('][', array_merge($element['#parents'], array('postnummer', 'postnummer'))),
+  );
+
+  return $element;
+}
+
+/**
+ * FAPI theme for an individual text elements.
+ */
+function theme_jquery_slider($element) {
+  return $element['#children'];
+}
+
+
+function _jquery_slider_validate($element, &$form_state) {
+  $from = $form_state['values']['from']; 
+  $to = $form_state['values']['to']; 
+
+  if (!is_numeric($from)) {
+    form_set_error($element['_error_element']['#value'],
+                   t('From should be a number.'));
+  }
+  
+  if (!is_numeric($to)) {
+    form_set_error($element['_error_element']['#value'],
+                   t('To should be a number.'));
+  }
+
+  if ($from >= $to) {
+    form_set_error($element['_error_element']['#value'],
+                   t('To should be larger than from.'));
+  }
+
+  if ($element['#maximum_difference'] &&  ($to - $from) > $element['#maximum_difference']) {
+    form_set_error($element['_error_element']['#value'],
+                   t('Difference between to and from should not be
+                   larger than %d'));
+  }
+}
+
