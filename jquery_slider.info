@@ -3,3 +3,4 @@ name = jQuery UI slider
 description = Provides jQuery UI sliders as a form element for use in other modules. Gracefully degrades to two textfields when JavaScript is not enabled.
 core = 6.x
 
+dependencies[] = jqp
