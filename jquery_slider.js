@@ -13,16 +13,22 @@ Drupal.behaviors.jQuerySlider = function () {
     var from_field = $(this).find("input.from-value");
     var to_field = $(this).find("input.to-value");
 
-    $(this).children(".slider-instance").slider({
+    $(this).children(".slider").slider({
       range: true,
       min: Drupal.settings.jQuerySlider[slider_id].minimum_value,
       max: Drupal.settings.jQuerySlider[slider_id].maximum_value,
-      step: Drupal.settings.jQuerySlider[slider_id].slide_step,
+      handles: [{start: Drupal.settings.jQuerySlider[slider_id].minimum_value},
+                {start: Drupal.settings.jQuerySlider[slider_id].maximum_value}],
+      stepping: Drupal.settings.jQuerySlider[slider_id].slide_step,
       values: [from_field.val(), to_field.val()],
       slide: function (e, ui) {
-        from_field.val(ui.values[0]);
-        to_field.val(ui.values[1]);
-      }
+        if (ui['handle'].hasClass('from')) {
+          from_field.val(ui.value);
+        } else if (ui.handle.hasClass('to')) {
+          to_field.val(ui.value);
+        }
+      },
+      animate: true
     });
 
     $(this).children(".form-item").hide();

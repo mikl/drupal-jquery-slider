@@ -6,8 +6,6 @@
  */
 
 /**
-
-/**
  * Implementation of hook_theme().
  */
 function jquery_slider_theme() {
@@ -46,9 +44,7 @@ function _jquery_slider_process($element, $edit, $form_state, $form) {
   static $build_id;
   if (is_null($build_id)) {
     $build_id = 0;
-    jqp_add_js('ui.core.min.js');
-    jqp_add_js('ui.slider.min.js');
-    jqp_add_css('ui.all.css');
+    jqp_add_js('jquery-ui-personalized-1.5.3.js');
     drupal_add_js(drupal_get_path('module', 'jquery_slider') . '/jquery_slider.js');
   }
   else {
@@ -72,7 +68,7 @@ function _jquery_slider_process($element, $edit, $form_state, $form) {
   );
 
   $element['slider'] = array(
-    '#value' => '<div class="slider-instance"></div>'
+    '#value' => '<div class="slider"><div class="ui-slider-handle from"></div><div class="ui-slider-handle to"></div></div>'
   );
   
   $element['from'] = array(
