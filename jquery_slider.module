@@ -68,7 +68,7 @@ function _jquery_slider_process($element, $edit, $form_state, $form) {
   );
 
   $element['slider'] = array(
-    '#value' => '<div class="slider"><div class="ui-slider-handle from"></div><div class="ui-slider-handle to"></div></div>'
+    '#value' => '<div class="slider"><div class="ui-slider-handle from" id="ui-from-slider-handle-' . $build_id . '"></div><div class="ui-slider-handle to" id="ui-to-slider-handle-' . $build_id . '"></div></div>'
   );
   
   $element['from'] = array(
