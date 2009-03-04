@@ -97,8 +97,7 @@ Drupal.behaviors.jQuerySlider = function () {
 						optional_span.show();
 					}
         }
-      },
-      animate: true
+      }
     });
 
     $(this).children(".form-item").hide();
