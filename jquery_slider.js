@@ -68,8 +68,10 @@ Drupal.behaviors.jQuerySlider = function () {
 		var slider_id = id_matcher.exec($(this).attr('id'))[1];
     var from_field = $(this).find("input.from-value");
     var to_field = $(this).find("input.to-value");
-		var suffix = new Array('kr.', '', 'm²', ' dage');
-		$(this).append('<div class="label">Fra <span class="from-slider-span">' + Drupal.settings.jQuerySlider[slider_id].minimum_value + '</span><span class="optional-to-slider"> til <span class="to-slider-span">' + Drupal.settings.jQuerySlider[slider_id].maximum_value + '</span></span><span id="livetown-slider-suffix-' + i + '">' + livetown_initial_value_suffix(i) +'</span></div>')
+		if ($(this).hasClass('processed') == false) {
+			$(this).addClass('processed');
+			$(this).append('<div class="label">Fra <span class="from-slider-span">' + Drupal.settings.jQuerySlider[slider_id].minimum_value + '</span><span class="optional-to-slider"> til <span class="to-slider-span">' + Drupal.settings.jQuerySlider[slider_id].maximum_value + '</span></span><span id="livetown-slider-suffix-' + i + '">' + livetown_initial_value_suffix(i) +'</span></div>');
+		}
 		var from_span = $(this).find(".from-slider-span");
 		var to_span = $(this).find(".to-slider-span");
 		var optional_span = $(this).find(".optional-to-slider");
