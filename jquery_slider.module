@@ -71,7 +71,7 @@ function _jquery_slider_process($element, $edit, $form_state, $form) {
     '#value' => '<div class="slider"><div class="ui-slider-handle from" id="ui-from-slider-handle-' . $build_id . '"></div><div class="ui-slider-handle to" id="ui-to-slider-handle-' . $build_id . '"></div></div>'
   );
   
-  $element['from'] = array(
+  $element[$element['#id'] . '-from'] = array(
     '#type' => 'textfield',
     '#title' => t('From'),
     '#size' => 7,
@@ -80,7 +80,7 @@ function _jquery_slider_process($element, $edit, $form_state, $form) {
     '#prefix' => '',
   );
 
-  $element['to'] = array(
+  $element[$element['#id'] . '-to'] = array(
     '#type' => 'textfield',
     '#title' => t('To'),
     '#size' => 7,
@@ -113,8 +113,8 @@ function theme_jquery_slider($element) {
 
 
 function _jquery_slider_validate($element, &$form_state) {
-  $from = $form_state['values']['from']; 
-  $to = $form_state['values']['to']; 
+  $from = $form_state['values'][$element['#id'] . '-from'];
+  $to = $form_state['values'][$element['#id'] . '-to'];
 
   if (!is_numeric($from)) {
     form_set_error($element['_error_element']['#value'],
